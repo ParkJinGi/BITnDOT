@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
@@ -7,13 +8,25 @@
 
 #define MODULE_CNT 6
 
+typedef struct Node {
+	unsigned char data;
+	struct Node *next;
+}Node;
+
+
+typedef struct Queue {
+	Node *front; 	
+	Node *rear; 
+	int count;
+}Queue;
+
 int clock_pin[MODULE_CNT] = {29,};
 int latch_pin[MODULE_CNT] = {28,};
 int data_pin[MODULE_CNT] = {27,};
 
 unsigned char SOL_NUM[6] = {
-		0b00000010, 0b00000100, 0b00001000,
-		0b00010000, 0b00100000, 0b01000000
+	0b00000010, 0b00000100, 0b00001000,
+	0b00010000, 0b00100000, 0b01000000
 };
 
 /*shut down specific module*/
@@ -25,5 +38,12 @@ void clear_all();
 /*control specific module*/
 void control_module(int module_num, unsigned char data);
 
-/*unicode to data for module*/
-unsigned char decoder(int unicode);
+/*make date using unicode and fill the queue*/
+void decoder(int unicode);
+
+/***********QUEUE LIBRARY**************/
+void InitQueue(Queue *queue);
+int IsEmpty(Queue *queue); 
+void Enqueue(Queue *queue, unsigned char data); 
+unsigned char Dequeue(Queue *queue); 
+/**************************************/
