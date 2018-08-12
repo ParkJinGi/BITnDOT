@@ -2,6 +2,19 @@
 
 Queue queue; // QUEUE
 
+void test(unsigned char data){
+	int i=2;
+	for(int j=0;j<6;j++){
+		if(data & i)
+			printf("● ");
+		else
+			printf("○ ");
+		if(j%2)
+			printf("\n");
+		i = i<<1;
+	}
+}
+
 int main(){
 
 	InitQueue(&queue);
@@ -20,6 +33,7 @@ int main(){
 void decoder(int unicode){
 	unsigned char data;
 	switch (unicode) {
+		/**********************초성************************/
 		case 0x1100: // ㄱ
 			data = SOL_NUM[1];
 			Enqueue(&queue, data);
@@ -106,7 +120,7 @@ void decoder(int unicode){
 			data = SOL_NUM[1]+SOL_NUM[5];
 			Enqueue(&queue, data);
 			break;
-		/******************************************/
+		/***************종성*******************/
 		case 0x11A8: // ㄱ
 			data = SOL_NUM[0];
 			Enqueue(&queue, data);
@@ -163,6 +177,7 @@ void decoder(int unicode){
 			data = SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
 			Enqueue(&queue, data);
 			break;
+		/***************쌍받침*********************/	
 		case 0x11A9: // ㄲ
 			data = SOL_NUM[0];
 			Enqueue(&queue, data);
@@ -173,8 +188,171 @@ void decoder(int unicode){
 			data = SOL_NUM[1]+SOL_NUM[4];
 			Enqueue(&queue, data);
 			break;
+		/****************겹받침*******************/
+		case 0x11AA: // 윿
+			data = SOL_NUM[0];
+			Enqueue(&queue, data);
+			data = SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x11AC: // 읁
+			data = SOL_NUM[2]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x11AD: // 읂
+			data = SOL_NUM[2]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			data = SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B1: // 읆
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[2]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B0: // 읅
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B2: // 읇
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[2];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B3: // 읈
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B4: // 읉
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[2]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B5: // 읊
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B6: // 읋
+			data = SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x11B9: // 읎
+			data = SOL_NUM[0]+SOL_NUM[2];
+			Enqueue(&queue, data);
+			data = SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		/*********************모음********************/
+		case 0x1161: // ㅏ
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x1163: // ㅑ
+			data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1165: // ㅓ
+			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1167: // ㅕ
+			data = SOL_NUM[0]+SOL_NUM[3]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x1169: // ㅗ
+			data = SOL_NUM[0]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x116D: // ㅛ
+			data = SOL_NUM[1]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x116E: // ㅜ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1172: // ㅠ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x1173: // ㅡ
+			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x1175: // ㅣ
+			data = SOL_NUM[0]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1162: // ㅐ
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1164: // ㅒ
+			data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1166: // ㅔ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1168: // ㅖ
+			data = SOL_NUM[1]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x116A: // ㅘ
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x116B: // ㅙ
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x116C: // ㅚ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+		case 0x116F: // ㅝ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1170: // ㅞ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1171: // ㅟ
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
+			Enqueue(&queue, data);
+			break;
+		case 0x1174: // ㅢ
+			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[5];
+			Enqueue(&queue, data);
+			break;
+
 	}
 }
+
+
 
 void clear(int module_num){
 	digitalWrite(latch_pin[module_num], LOW);
