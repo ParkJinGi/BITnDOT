@@ -7,14 +7,15 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORTNUM 8000
+#define PORTNUM 9000
+#define IP_ADDR "127.0.0.1"
 
 #define COMPLETE "#complete&"
 #define QUIT "#quit&"
 
 int main()
 {
-	char buf[256];
+	char buf[BUFSIZ] = {'\0'};
 	struct sockaddr_in sin, cli;
 	int sd, ns, clientlen = sizeof(cli);
 	int len = 0;
@@ -23,7 +24,7 @@ int main()
 	memset((char *)&sin, '\0', sizeof(sin));
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(PORTNUM);
-	sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+	sin.sin_addr.s_addr = inet_addr(IP_ADDR);
 
 	// Make socket (TCP : SOCK_STREAM)
 	if((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1)
@@ -57,20 +58,24 @@ int main()
 	sprintf(buf, "%s", inet_ntoa(cli.sin_addr));
 
 	printf("*** Connect with [ %s ] ***\n", buf);
+	memset(buf, '\0', BUFSIZ);
 	
-	strcpy(buf, "Connect with Server successfully!");
-	if(send(ns, buf, strlen(buf)+1, 0) == -1)
+	// Send a message to CLIENT
+	sprintf(buf, "%s", "Connect with Server successfully!");
+	if(write(ns, buf, strlen(buf)+1) == -1)
 	{
-		perror("send");
+		perror("write");
 		exit(1);
 	}
-
+	
 	// RUN SERVER
 	while(1)
 	{
-		if(len = recv(ns, buf, strlen(buf), 0) == -1)
+		// Receive from CLIENT
+		memset(buf, '\0', BUFSIZ);
+		if((len = read(ns, buf, BUFSIZ)) == -1)
 		{
-			perror("recv");
+			perror("read");
 			exit(1);
 		}
 		
@@ -78,20 +83,34 @@ int main()
 
 		if(strncmp(buf, QUIT, strlen(QUIT)) == 0)
 		{
-			printf("Disconnect with client");
+			// If receive "#quit&" from CLIENT
+			// SERVER also sends QUIT message
+			// and terminates the connection with CLIENT
+			memset(buf, '\0', BUFSIZ);
+			sprintf(buf, "%s", QUIT);
+			if(write(ns, buf, strlen(buf)+1) == -1)
+			{
+				perror("write");
+				exit(1);
+			}
+
+			printf("Disconnect with client\n");
 			break;
 		}
 
 		printf("CLIENT : %s\n", buf);
-
-		strcpy(buf, COMPLETE);
-		if(send(ns, buf, strlen(buf)+1, 0) == -1)
+		
+		// If receive all messages from CLIENT
+		// SERVER sends COMPLETE message to confirm
+		memset(buf, '\0', sizeof(buf));
+		sprintf(buf, "%s", COMPLETE);
+		if(write(ns, buf, strlen(buf)+1) == -1)
 		{
-			perror("send");
+			perror("write");
 			exit(1);
 		}
 	}
-
+	
 	close(ns);
 	close(sd);
 
