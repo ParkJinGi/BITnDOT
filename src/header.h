@@ -3,10 +3,10 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
-#include <wiringPi.h>
-#include <wiringShift.h>
+//#include <wiringPi.h>
+//#include <wiringShift.h>
 
-#define MODULE_CNT 6
+#define MODULE_CNT 7
 
 typedef struct Node {
 	unsigned char data;
@@ -40,6 +40,9 @@ void control_module(int module_num, unsigned char data);
 
 /*make date using unicode and fill the queue*/
 void decoder(int unicode);
+
+/*check prev unicode is figure*/
+int prev_is_figure();
 
 /***********QUEUE LIBRARY**************/
 void InitQueue(Queue *queue);

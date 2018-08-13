@@ -1,24 +1,40 @@
 #include "header.h"
 
 Queue queue; // QUEUE
+unsigned char prev = -1;
 
-void test(unsigned char data){
-	int i=2;
-	for(int j=0;j<6;j++){
-		if(data & i)
-			printf("● ");
-		else
-			printf("○ ");
-		if(j%2)
+void test(){
+	unsigned char data[MODULE_CNT];
+	int bit=2;
+	while(!IsEmpty(&queue)){
+		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
+		for(int i=0;i<MODULE_CNT;i++){
+			if(IsEmpty(&queue))
+				break;
+			data[i] = Dequeue(&queue);
+		}
+		
+		for(int i=0;i<3;i++){
+			for(int j=0;j<MODULE_CNT;j++){
+				for(int k=0;k<2;k++){
+					if(data[j] & (bit << ((i*2)+k)))
+						printf("● ");
+					else
+						printf("○ ");
+				}
+				printf("  ");
+			}
 			printf("\n");
-		i = i<<1;
+		}
+		printf("\n\n");
+
 	}
 }
 
 int main(){
 
 	InitQueue(&queue);
-	
+/*	
 	if(wiringPiSetup() == -1)
 		return 1;
 	
@@ -27,7 +43,12 @@ int main(){
 		pinMode(clock_pin[i], OUTPUT);
 		pinMode(data_pin[i], OUTPUT);
 	}
-
+*/
+	int t[7]={0x0031,0x0030,0x0030,0x1102,0x1175,0x1103,0x1161};
+	for(int i=0;i<4;i++)
+		decoder(t[i]);
+	test();
+	
 }
 
 void decoder(int unicode){
@@ -39,10 +60,14 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x1102: // ㄴ
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			data = SOL_NUM[0]+SOL_NUM[1];
 			Enqueue(&queue, data);
 			break;
-		case 0x1103: // ㄷ
+		case 0x1103: // ㄷ	
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			data = SOL_NUM[1]+SOL_NUM[2];
 			Enqueue(&queue, data);
 			break;
@@ -51,6 +76,8 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x1106: //ㅁ
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			data = SOL_NUM[0]+SOL_NUM[3];
 			Enqueue(&queue, data);
 			break;
@@ -76,6 +103,8 @@ void decoder(int unicode){
 			break;
 		case 0x110F: // ㅋ
 			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2];
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			Enqueue(&queue, data);
 			break;
 		case 0x1110: // ㅌ
@@ -83,10 +112,14 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x1111: // ㅍ
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[3];
 			Enqueue(&queue, data);
 			break;
 		case 0x1112: // ㅎ
+			if(prev_is_figure())
+				Enqueue(&queue, 0);
 			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3];
 			Enqueue(&queue, data);
 			break;
@@ -348,12 +381,99 @@ void decoder(int unicode){
 			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[5];
 			Enqueue(&queue, data);
 			break;
+		/**********************figure**************************/
+		case 0x0030: // 0
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0031: // 1
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue(&queue, data);
+			break;
+		case 0x0032: // 2
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0033: // 3
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[1];
+			Enqueue(&queue, data);
+			break;
+		case 0x0034: // 4
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0035: // 5	
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0036: // 6	
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2];
+			Enqueue(&queue, data);
+			break;
+		case 0x0037: // 7
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0038: // 8	
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3];
+			Enqueue(&queue, data);
+			break;
+		case 0x0039: // 9
+			if(!prev_is_figure()){
+				data = SOL_NUM[1]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
+			data = SOL_NUM[1]+SOL_NUM[2];
+			Enqueue(&queue, data);
+			break;
 
 	}
+	prev = unicode;
 }
 
-
-
+int prev_is_figure(){
+	if(prev >= 0x0030 && prev <= 0x0039)
+		return 1;
+	else
+		return 0;
+}
+/*
 void clear(int module_num){
 	digitalWrite(latch_pin[module_num], LOW);
 	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0x00);
@@ -372,7 +492,7 @@ void control_module(int module_num, unsigned char data){
 	digitalWrite(latch_pin[module_num], HIGH);
 	delay(1);
 }
-
+*/
 /**********************QUEUE**************************/
 void InitQueue(Queue *queue)
 {
