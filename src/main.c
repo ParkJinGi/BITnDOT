@@ -1,35 +1,7 @@
 #include "header.h"
 
 Queue queue; // QUEUE
-unsigned char prev = -1;
-
-void test(){
-	unsigned char data[MODULE_CNT];
-	int bit=2;
-	while(!IsEmpty(&queue)){
-		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
-		for(int i=0;i<MODULE_CNT;i++){
-			if(IsEmpty(&queue))
-				break;
-			data[i] = Dequeue(&queue);
-		}
-		
-		for(int i=0;i<3;i++){
-			for(int j=0;j<MODULE_CNT;j++){
-				for(int k=0;k<2;k++){
-					if(data[j] & (bit << ((i*2)+k)))
-						printf("● ");
-					else
-						printf("○ ");
-				}
-				printf("  ");
-			}
-			printf("\n");
-		}
-		printf("\n\n");
-
-	}
-}
+int prev = -1;
 
 int main(){
 
@@ -44,11 +16,10 @@ int main(){
 		pinMode(data_pin[i], OUTPUT);
 	}
 */
-	int t[7]={0x0031,0x0030,0x0030,0x1102,0x1175,0x1103,0x1161};
+	int t[7]={0x110C,0x1161,0x110C,0x1161,0x1175,0x1103,0x1161};
 	for(int i=0;i<4;i++)
 		decoder(t[i]);
-	test();
-	
+	print_queue();
 }
 
 void decoder(int unicode){
@@ -155,11 +126,44 @@ void decoder(int unicode){
 			break;
 		/***************종성*******************/
 		case 0x11A8: // ㄱ
-			data = SOL_NUM[0];
+			if (prev == 0x1165) { // 억
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[3] + SOL_NUM[5];
+			}
+			else if (prev == 0x1169) { // 옥
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[4] + SOL_NUM[5];
+			}else
+				data = SOL_NUM[0];
 			Enqueue(&queue, data);
 			break;
 		case 0x11AB: // ㄴ
-			data = SOL_NUM[2]+SOL_NUM[3];
+			if (prev == 0x1165) { // 언
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else if (prev == 0x1167) { // 연
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[5];
+			}
+			else if (prev == 0x116E) { // 운
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3];
+			}
+			else if (prev == 0x1169) { // 온
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else if (prev == 0x1173) { // 은
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else if (prev == 0x1175) { // 인
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4];
+			}
+			else
+				data = SOL_NUM[2]+SOL_NUM[3];
 			Enqueue(&queue, data);
 			break;
 		case 0x11AE: // ㄷ
@@ -167,7 +171,24 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x11AF: //ㄹ
-			data = SOL_NUM[2];
+			if (prev == 0x1165) { // 얼
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4];
+			}
+			else if (prev == 0x1167) { // 열
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+			}
+			else if (prev == 0x116E) { // 울
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else if (prev == 0x1173) { // 을
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else
+				data = SOL_NUM[2];
 			Enqueue(&queue, data);
 			break;
 		case 0x11B7: //ㅁ
@@ -179,11 +200,27 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x11BA: //ㅅ
-			data = SOL_NUM[4];
+			if (prev == 0x1165) { // 엇
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue(&queue, data);
+				data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[4];
+			}
+			else
+				data = SOL_NUM[4];
 			Enqueue(&queue, data);
 			break;
 		case 0x11BC: // ㅇ
-			data = SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];
+			if (prev == 0x1167) { // 영
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+			}
+			else if (prev == 0x1169) { // 옹
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			}
+			else
+				data = SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5];	
 			Enqueue(&queue, data);
 			break;
 		case 0x11BD: // ㅈ
@@ -290,7 +327,66 @@ void decoder(int unicode){
 			break;
 		/*********************모음********************/
 		case 0x1161: // ㅏ
-			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[5];
+			if (prev == 0x1100) { // 가
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[5];
+			}
+			if (prev == 0x1101) { // 까
+				Dequeue_Back(&queue);
+				Dequeue_Back(&queue);
+				data = SOL_NUM[5];
+				Enqueue(&queue, data);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[5];
+			}
+			else if (prev == 0x1102) { // 나
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1];
+			}
+			else if (prev == 0x1103) { // 다
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[2];
+			}
+			else if (prev == 0x1106) { // 마
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[3];
+			}
+			else if (prev == 0x1107) { // 바
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[3];
+			}
+			else if (prev == 0x1109) { // 사
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1];
+			}
+			if (prev == 0x110A) { // 싸
+				Dequeue_Back(&queue);
+				Dequeue_Back(&queue);
+				data = SOL_NUM[5];
+				Enqueue(&queue, data);
+				data = SOL_NUM[0] + SOL_NUM[1];
+			}
+			else if (prev == 0x110C) { // 자
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[5];
+			}
+			else if (prev == 0x110F) { // 카
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[2];
+			}
+			else if (prev == 0x1110) { // 타
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3];
+			}
+			else if (prev == 0x1111) { // 파
+				Dequeue_Back(&queue);
+				data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[3];
+			}
+			else if (prev == 0x1112) { // 하
+				Dequeue_Back(&queue);
+				data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[3];
+			}
+			else
+				data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[5];
 			Enqueue(&queue, data);
 			break;
 		case 0x1163: // ㅑ
@@ -538,4 +634,51 @@ unsigned char Dequeue(Queue *queue)
 	queue->count--;
 	return re;
 }
+
+unsigned char Dequeue_Back(Queue *queue)
+{
+	unsigned char re = 0;
+	Node *now;
+	Node *tmp = queue->front;
+	if (IsEmpty(queue))
+	{
+		return re;
+	}
+	now = queue->rear;
+	re = now->data;
+	for (int i = 0;i < queue->count - 2;i++)
+		tmp = tmp->next;
+	queue->rear = tmp;
+	free(now);
+	queue->count--;
+	return re;
+}
 /*********************************************************/
+
+void print_queue() {
+	unsigned char data[MODULE_CNT];
+	int bit = 2;
+	while (!IsEmpty(&queue)) {
+		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
+		for (int i = 0;i<MODULE_CNT;i++) {
+			if (IsEmpty(&queue))
+				break;
+			data[i] = Dequeue(&queue);
+		}
+
+		for (int i = 0;i<3;i++) {
+			for (int j = 0;j<MODULE_CNT;j++) {
+				for (int k = 0;k<2;k++) {
+					if (data[j] & (bit << ((i * 2) + k)))
+						printf("● ");
+					else
+						printf("○ ");
+				}
+				printf("  ");
+			}
+			printf("\n");
+		}
+		printf("\n\n");
+
+	}
+}

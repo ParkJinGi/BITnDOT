@@ -29,6 +29,9 @@ unsigned char SOL_NUM[6] = {
 	0b00010000, 0b00100000, 0b01000000
 };
 
+/*print to console*/
+void print_queue();
+
 /*shut down specific module*/
 void clear(int module_num);
 
@@ -49,4 +52,5 @@ void InitQueue(Queue *queue);
 int IsEmpty(Queue *queue); 
 void Enqueue(Queue *queue, unsigned char data); 
 unsigned char Dequeue(Queue *queue); 
+unsigned char Dequeue_Back(Queue *queue);
 /**************************************/
