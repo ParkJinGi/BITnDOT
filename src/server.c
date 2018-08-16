@@ -7,7 +7,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORTNUM 9000
+#define PORTNUM 9500
 #define IP_ADDR "127.0.0.1"
 
 #define COMPLETE "#complete&"
@@ -19,6 +19,7 @@ int main()
 	struct sockaddr_in sin, cli;
 	int sd, ns, clientlen = sizeof(cli);
 	int len = 0;
+	int fd;
 
 	// socket type : AF_INMET
 	memset((char *)&sin, '\0', sizeof(sin));
