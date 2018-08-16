@@ -1,31 +1,45 @@
-#include "header.h"
+typedef struct Node {
+	unsigned char data;
+	struct Node *next;
+}Node;
+
+typedef struct Queue {
+	Node *front; 	
+	Node *rear; 
+	int count;
+}Queue;
+
+void InitQueue(Queue *queue);
+int IsEmpty(Queue *queue); 
+void Enqueue(Queue *queue, unsigned char data); 
+unsigned char Dequeue(Queue *queue); 
+unsigned char Dequeue_Back(Queue *queue);
 
 void InitQueue(Queue *queue)
 {
-	queue->front = queue->rear = NULL; 
+	queue->front = queue->rear = NULL;
 	queue->count = 0;
 }
 
 int IsEmpty(Queue *queue)
 {
-	return queue->count == 0;    
+	return queue->count == 0;
 }
 
 void Enqueue(Queue *queue, unsigned char data)
 {
-	Node *now = (Node *)malloc(sizeof(Node)); 
+	Node *now = (Node *)malloc(sizeof(Node));
 	now->data = data;
 	now->next = NULL;
-
 	if (IsEmpty(queue))
 	{
-		queue->front = now;      
+		queue->front = now;
 	}
 	else
 	{
 		queue->rear->next = now;
 	}
-	queue->rear = now;  
+	queue->rear = now;
 	queue->count++;
 }
 
@@ -64,3 +78,14 @@ unsigned char Dequeue_Back(Queue *queue)
 	return re;
 }
 
+Queue* queue_copy(Queue *origin) {
+	Queue* copy = (Queue *)malloc(sizeof(Queue));
+	Node* tmp = origin->front;
+	int queue_size = origin->count;
+	InitQueue(copy);
+	for (int i = 0;i < queue_size;i++) {
+		Enqueue(copy, tmp->data);
+		tmp = tmp->next;
+	}
+	return copy;
+}
