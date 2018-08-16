@@ -9,7 +9,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORTNUM 9500
+#define PORTNUM 9502
 #define IP_ADDR "127.0.0.1"
 
 #define COMPLETE "#complete&"
