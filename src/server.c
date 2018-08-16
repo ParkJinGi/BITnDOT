@@ -1,3 +1,6 @@
+#include "text_to_dot.h"
+#include "queue.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -100,7 +103,7 @@ int main()
 		}
 
 		printf("CLIENT : %s\n", buf);
-		
+
 		// If receive all messages from CLIENT
 		// SERVER sends COMPLETE message to confirm
 		memset(buf, '\0', sizeof(buf));
