@@ -1,3 +1,3 @@
 a:
-	sudo gcc test.c -lwiringPi
+	sudo gcc main.c -lwiringPi
 	sudo ./a.out

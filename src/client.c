@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fcntl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
@@ -8,7 +9,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define PORTNUM 9000
+#define PORTNUM 9502
 #define IP_ADDR "127.0.0.1"
 
 #define COMPLETE "#complete&"
@@ -20,6 +21,7 @@ int main()
 	char buf[BUFSIZ] = {'\0'};
 	struct sockaddr_in sin;
 	int len = 0, q_flag = 0;
+	int fd;
 
 	memset((char *)&sin, '\0', sizeof(sin));
 	sin.sin_family = AF_INET;
@@ -57,11 +59,44 @@ int main()
 		memset(buf, '\0', BUFSIZ);
 		scanf("%s", buf);
 
+		// -----
+		if(strncmp(buf, QUIT, strlen(QUIT)) == 0)
+		{
+			if(write(sd, buf, strlen(buf)) == -1)
+			{
+				perror("write");
+				exit(1);
+			}
+			break;
+		}
+
+		if((fd = open(buf, O_RDONLY)) < 0)
+		{
+			perror("open");
+			exit(1);
+		}
+
+		while(0 < (len = read(fd, buf, BUFSIZ-1)))
+		{
+			buf[len] = '\0';
+			if(write(sd, buf, strlen(buf)) == -1)
+			{
+				perror("write");
+				exit(1);
+			}
+			memset(buf, '\0', BUFSIZ);
+		}
+
+		close(fd);
+		// -----
+		
+		/*
 		if(write(sd, buf, strlen(buf)+1) == -1)
 		{
 			perror("write");
 			exit(1);
 		}
+		*/
 
 		// Receive from SERVER
 		memset(buf, '\0', BUFSIZ);

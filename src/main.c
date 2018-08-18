@@ -7,20 +7,148 @@ int prevv = -1;
 int main(){
 
 	InitQueue(&queue);
-/*	
 	if(wiringPiSetup() == -1)
 		return 1;
-	
-	for(int i=0;i<MODULE_CNT;i++){
+	for(int i=0;i<1;i++){
 		pinMode(latch_pin[i], OUTPUT);
 		pinMode(clock_pin[i], OUTPUT);
 		pinMode(data_pin[i], OUTPUT);
 	}
-*/
+	unsigned char a = 0b00000001;
+	unsigned char b= 0b11111110;
+	printf("%d %d\n",b,255^a);
+	while(1){
+		clear(0);
+		delay(1000);
+		digitalWrite(latch_pin[0],LOW);
+		shiftOut(data_pin[0], clock_pin[0], MSBFIRST, 0x00);
+		digitalWrite(latch_pin[0], HIGH);
+		delay(1000);
+	}
+	/*
 	int t[7]={0x110C,0x1161,0x110C,0x1161,0x1175,0x1103,0x1161};
 	for(int i=0;i<4;i++)
 		decoder(t[i]);
-	print_queue();
+	print_queue();*/
+}
+
+void clear(int module_num){
+	digitalWrite(latch_pin[module_num], LOW);
+	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0xFF);
+	digitalWrite(latch_pin[module_num], HIGH);
+	delay(1);
+}
+
+void clear_all(){
+	for(int i=0;i<MODULE_CNT;i++)
+		clear(i);
+}
+
+void control_module(int module_num, unsigned char data){
+	digitalWrite(latch_pin[module_num], LOW);
+	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, data);
+	digitalWrite(latch_pin[module_num], HIGH);
+	delay(1);
+}
+
+/**********************QUEUE**************************/
+void InitQueue(Queue *queue)
+{
+	queue->front = queue->rear = NULL; 
+	queue->count = 0;
+}
+
+int IsEmpty(Queue *queue)
+{
+	return queue->count == 0;    
+}
+
+void Enqueue(Queue *queue, unsigned char data)
+{
+	Node *now = (Node *)malloc(sizeof(Node)); 
+	now->data = data;
+	now->next = NULL;
+
+	if (IsEmpty(queue))
+	{
+		queue->front = now;      
+	}
+	else
+	{
+		queue->rear->next = now;
+	}
+	queue->rear = now;  
+	queue->count++;
+}
+
+unsigned char Dequeue(Queue *queue)
+{
+	unsigned char re = 0;
+	Node *now;
+	if (IsEmpty(queue))
+	{
+		return re;
+	}
+	now = queue->front;
+	re = now->data;
+	queue->front = now->next;
+	free(now);
+	queue->count--;
+	return re;
+}
+
+unsigned char Dequeue_Back(Queue *queue)
+{
+	unsigned char re = 0;
+	Node *now;
+	Node *tmp = queue->front;
+	if (IsEmpty(queue))
+	{
+		return re;
+	}
+	now = queue->rear;
+	re = now->data;
+	for (int i = 0;i < queue->count - 2;i++)
+		tmp = tmp->next;
+	queue->rear = tmp;
+	free(now);
+	queue->count--;
+	return re;
+}
+
+/*********************************************************/
+
+int prev_is_figure(){
+	if(prev >= 0x0030 && prev <= 0x0039)
+		return 1;
+	else
+		return 0;
+}
+
+void print_queue() {
+	unsigned char data[MODULE_CNT];
+	int bit = 2;
+	while (!IsEmpty(&queue)) {
+		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
+		for (int i = 0;i<MODULE_CNT;i++) {
+			if (IsEmpty(&queue))
+				break;
+			data[i] = Dequeue(&queue);
+		}
+		for (int i = 0;i<3;i++) {
+			for (int j = 0;j<MODULE_CNT;j++) {
+				for (int k = 0;k<2;k++) {
+					if (data[j] & (bit << ((i * 2) + k)))
+						printf("● ");
+					else
+						printf("○ ");
+				}
+				printf("  ");
+			}
+			printf("\n");
+		}
+		printf("\n\n");
+	}
 }
 
 void decoder(int unicode){
@@ -579,122 +707,4 @@ void decoder(int unicode){
 	prev = unicode;
 }
 
-int prev_is_figure(){
-	if(prev >= 0x0030 && prev <= 0x0039)
-		return 1;
-	else
-		return 0;
-}
-/*
-void clear(int module_num){
-	digitalWrite(latch_pin[module_num], LOW);
-	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0x00);
-	digitalWrite(latch_pin[module_num], HIGH);
-	delay(1);
-}
 
-void clear_all(){
-	for(int i=0;i<MODULE_CNT;i++)
-		clear(i);
-}
-
-void control_module(int module_num, unsigned char data){
-	digitalWrite(latch_pin[module_num], LOW);
-	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, data);
-	digitalWrite(latch_pin[module_num], HIGH);
-	delay(1);
-}
-*/
-/**********************QUEUE**************************/
-void InitQueue(Queue *queue)
-{
-	queue->front = queue->rear = NULL; 
-	queue->count = 0;
-}
-
-int IsEmpty(Queue *queue)
-{
-	return queue->count == 0;    
-}
-
-void Enqueue(Queue *queue, unsigned char data)
-{
-	Node *now = (Node *)malloc(sizeof(Node)); 
-	now->data = data;
-	now->next = NULL;
-
-	if (IsEmpty(queue))
-	{
-		queue->front = now;      
-	}
-	else
-	{
-		queue->rear->next = now;
-	}
-	queue->rear = now;  
-	queue->count++;
-}
-
-unsigned char Dequeue(Queue *queue)
-{
-	unsigned char re = 0;
-	Node *now;
-	if (IsEmpty(queue))
-	{
-		return re;
-	}
-	now = queue->front;
-	re = now->data;
-	queue->front = now->next;
-	free(now);
-	queue->count--;
-	return re;
-}
-
-unsigned char Dequeue_Back(Queue *queue)
-{
-	unsigned char re = 0;
-	Node *now;
-	Node *tmp = queue->front;
-	if (IsEmpty(queue))
-	{
-		return re;
-	}
-	now = queue->rear;
-	re = now->data;
-	for (int i = 0;i < queue->count - 2;i++)
-		tmp = tmp->next;
-	queue->rear = tmp;
-	free(now);
-	queue->count--;
-	return re;
-}
-/*********************************************************/
-
-void print_queue() {
-	unsigned char data[MODULE_CNT];
-	int bit = 2;
-	while (!IsEmpty(&queue)) {
-		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
-		for (int i = 0;i<MODULE_CNT;i++) {
-			if (IsEmpty(&queue))
-				break;
-			data[i] = Dequeue(&queue);
-		}
-
-		for (int i = 0;i<3;i++) {
-			for (int j = 0;j<MODULE_CNT;j++) {
-				for (int k = 0;k<2;k++) {
-					if (data[j] & (bit << ((i * 2) + k)))
-						printf("● ");
-					else
-						printf("○ ");
-				}
-				printf("  ");
-			}
-			printf("\n");
-		}
-		printf("\n\n");
-
-	}
-}

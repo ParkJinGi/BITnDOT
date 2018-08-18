@@ -3,8 +3,8 @@
 #include <unistd.h>
 #include <time.h>
 #include <string.h>
-//#include <wiringPi.h>
-//#include <wiringShift.h>
+#include <wiringPi.h>
+#include <wiringShift.h>
 
 #define MODULE_CNT 7
 
