@@ -2,6 +2,7 @@
 
 Queue queue; // QUEUE
 int prev = -1;
+int prevv = -1;
 
 int main(){
 
@@ -61,8 +62,10 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x110B: // ㅇ
-			//data = SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3];
-			//Enqueue(&queue, data);
+			if ((prev == 0x1161) && (prevv == 0x1102 || prevv == 0x1103 || prevv == 0x1106 || prevv == 0x1107 || prevv == 0x110C || prevv == 0x110F || prevv == 0x1110 || prevv == 0x1111 || prevv == 0x1112)) {
+				data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
 			break;
 		case 0x110C: // ㅈ
 			data = SOL_NUM[1]+SOL_NUM[5];
@@ -255,6 +258,10 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x11BB: // ㅆ
+			if (prev == 0x1161 && prevv == 0x1111) {
+				data = data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
 			data = SOL_NUM[1]+SOL_NUM[4];
 			Enqueue(&queue, data);
 			break;
@@ -426,6 +433,10 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x1162: // ㅐ
+			if ((prev == 0x110B) && (prevv == 0x1163 || prevv == 0x116E || prevv == 0x116A || prevv == 0x116F) ) {
+				data = SOL_NUM[4] + SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
 			data = SOL_NUM[0]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4];
 			Enqueue(&queue, data);
 			break;
@@ -440,6 +451,10 @@ void decoder(int unicode){
 			Enqueue(&queue, data);
 			break;
 		case 0x1168: // ㅖ
+			if (!(prevv >= 0x11A8 && prevv <= 0x11C2) && prev == 0x110B) {
+				data = SOL_NUM[4] + SOL_NUM[5];
+				Enqueue(&queue, data);
+			}
 			data = SOL_NUM[1]+SOL_NUM[4];
 			Enqueue(&queue, data);
 			break;
@@ -560,6 +575,7 @@ void decoder(int unicode){
 			break;
 
 	}
+	prevv = prev;
 	prev = unicode;
 }
 
