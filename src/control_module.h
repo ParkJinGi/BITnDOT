@@ -16,7 +16,7 @@ void control_module(int module_num, unsigned char data);
 
 void clear(int module_num) {
 	digitalWrite(latch_pin[module_num], LOW);
-	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0xFF);
+	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0x00);
 	digitalWrite(latch_pin[module_num], HIGH);
 	delay(1);
 }

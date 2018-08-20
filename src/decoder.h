@@ -22,13 +22,14 @@ int prev_is_figure() {
 void print_queue(Queue *queue) {
 	unsigned char data[MODULE_CNT];
 	int bit = 2;
+	Queue* copy = queue_copy(queue);
 	printf("========================================\n");
-	while (!IsEmpty(queue)) {
+	while (!IsEmpty(copy)) {
 		memset(data, 0xFF, sizeof(unsigned char) * MODULE_CNT);
 		for (int i = 0;i < MODULE_CNT;i++) {
-			if (IsEmpty(queue))
+			if (IsEmpty(copy))
 				break;
-			data[i] = Dequeue(queue);
+			data[i] = Dequeue(copy);
 		}
 		for (int i = 0;i < 3;i++) {
 			for (int j = 0;j < MODULE_CNT;j++) {
@@ -597,7 +598,6 @@ void decoder(Queue *queue, int unicode) {
 		data = SOL_NUM[1] + SOL_NUM[2];
 		Enqueue(queue, data);
 		break;
-
 	}
 	prevv = prev;
 	prev = unicode;

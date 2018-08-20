@@ -77,3 +77,15 @@ unsigned char Dequeue_Back(Queue *queue)
 	queue->count--;
 	return re;
 }
+
+Queue* queue_copy(Queue *origin) {
+	Queue* copy = (Queue *)malloc(sizeof(Queue));
+	Node* tmp = origin->front;
+	int queue_size = origin->count;
+	InitQueue(copy);
+	for (int i = 0;i < queue_size;i++) {
+		Enqueue(copy, tmp->data);
+		tmp = tmp->next;
+	}
+	return copy;
+}
