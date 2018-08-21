@@ -6,8 +6,6 @@
 #include "queue.h"
 #define MODULE_CNT 7
 
-Queue queue;
-
 int clock_pin[MODULE_CNT] = {29,};
 int latch_pin[MODULE_CNT] = {28,};
 int data_pin[MODULE_CNT] = {27,};
