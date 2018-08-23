@@ -6,26 +6,80 @@
 
 Queue queue;
 
-int main() {
+void a(){
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
+}
 
+int main() {
 #ifndef FOR_TEST
 	InitModule();
 #endif
-
 	InitQueue(&queue);
-	/*while (1) {
-		clear(0);
-		delay(1000);
-		digitalWrite(latch_pin[0], LOW);
-		shiftOut(data_pin[0], clock_pin[0], MSBFIRST, 0x00);
-		digitalWrite(latch_pin[0], HIGH);
-		delay(1000);
-	}*/
+	Enqueue(&queue, SOL_NUM[0]);
+	Enqueue(&queue, SOL_NUM[1]);
+	Enqueue(&queue, SOL_NUM[2]);
+	Enqueue(&queue, SOL_NUM[3]);
+	Enqueue(&queue, SOL_NUM[4]);
+	Enqueue(&queue, SOL_NUM[5]);
 
-	int t[7]={0x0041,0x0062,0x1105,0x1161,0x1175,0x1103,0x1161};
+	Enqueue(&queue, SOL_NUM[0]+SOL_NUM[1]);
+	Enqueue(&queue, SOL_NUM[2]+SOL_NUM[3]);
+	Enqueue(&queue, SOL_NUM[4]+SOL_NUM[5]);
 
-	for(int i=0;i<4;i++)
-		decoder(&queue, t[i]);
+	Enqueue(&queue, SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]);
+	Enqueue(&queue, SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5]);
 	
-	print_queue(&queue);
+	Enqueue(&queue, SSOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5]);
+	/***************  Module test Code  *********************/
+	while(1){
+		a();
+		printf("1번 솔레노이드 작동 ! \n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("2번 솔레노이드 작동 ! \n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("3번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("4번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("5번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("6번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("1번 2번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("3번 4번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("5번 6번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("1번 2번 3번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("4번 5번 6번 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+		printf("모든 솔레노이드 작동 !\n");
+		control_module(0, Dequeue(&queue));
+		sleep(5000);
+		a();
+	}
 }
