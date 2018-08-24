@@ -16,86 +16,56 @@ void clear_all();
 
 /*control specific module*/
 void control_module(int module_num, unsigned char data);
-Queue queue;
 
-void a(){
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-}
+/*queue for module*/
+Queue queue_module;
+
+/*queue for unicode*/
+Queue queue_uni;
 
 int main() {
 
 #ifndef FOR_TEST
 	InitModule();
 #endif
-	InitQueue(&queue);
+
+	int module_num;
+	InitQueue(&queue_module);
+	InitQueue(&queue_uni);
 	
-	Enqueue(&queue, SOL_NUM[0]);
-	Enqueue(&queue, SOL_NUM[1]);
-	Enqueue(&queue, SOL_NUM[2]);
-	Enqueue(&queue, SOL_NUM[3]);
-	Enqueue(&queue, SOL_NUM[4]);
-	Enqueue(&queue, SOL_NUM[5]);
-
-	Enqueue(&queue, SOL_NUM[0]+SOL_NUM[1]);
-	Enqueue(&queue, SOL_NUM[2]+SOL_NUM[3]);
-	Enqueue(&queue, SOL_NUM[4]+SOL_NUM[5]);
-
-	Enqueue(&queue, SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]);
-	Enqueue(&queue, SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5]);
-
-	Enqueue(&queue, SOL_NUM[0]+SOL_NUM[1]+SOL_NUM[2]+SOL_NUM[3]+SOL_NUM[4]+SOL_NUM[5]);
-	/***************  Module test Code  *********************/
 	while(1){
-		a();
-		printf("1번 솔레노이드 작동 ! \n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("2번 솔레노이드 작동 ! \n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("3번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("4번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("5번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("6번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("1번 2번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("3번 4번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("5번 6번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("1번 2번 3번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("4번 5번 6번 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
-		printf("모든 솔레노이드 작동 !\n");
-		control_module(0, Dequeue(&queue));
-		delay(5000);
-		a();
+		
+		/*
+			1. 버튼 눌렀을 때 카메라 찍기
+
+			2. OCR처리하고 큐에 유니코드 저장
+
+		   */
+
+		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
+		while(!IsEmpty(&queue_uni))
+			Enqueue(&queue_module, decoder(Dequeue(&queue_uni)));
+		
+		while(!IsEmpty(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
+			
+			/*4. 7개 씩 모듈 제어*/
+			for(module_num = 0;module_num < MODULE_CNT;module_num++){
+				if(IsEmpty(&queue_module))
+					break;
+				else					
+					control_module(module_num, Dequeue(&queue_module));
+				
+			}
+
+			/*5. 다음 버튼을 누를 때 까지 대기*/
+			getchar();
+
+			/*6. 모듈 초기화*/
+			clear_all();
+		}
+		
 	}
+
 }
 
 void clear(int module_num) {
