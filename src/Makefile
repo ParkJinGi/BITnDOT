@@ -7,5 +7,5 @@ T:
 	./a.out
 # To using Modules
 M:
-	sudo gcc main.c 
+	sudo gcc main.c -lwiringPi
 	sudo ./a.out
