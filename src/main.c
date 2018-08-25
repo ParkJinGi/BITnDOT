@@ -1,7 +1,7 @@
 #include "decoder.h"
 
 #ifdef FOR_MODULE
-
+/*****************FOR Test with MODULES********************/
 #include <wiringPi.h>
 #include <wiringShift.h>
 
@@ -17,6 +17,7 @@ void clear_all();
 /*control specific module*/
 void control_module(int module_num, unsigned char data);
 
+/**********************************************************/
 #endif
 
 /*queue for module*/
