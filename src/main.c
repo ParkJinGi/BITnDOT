@@ -32,29 +32,46 @@ int main() {
 	int module_num;
 	InitQueue(&queue_module);
 	InitQueue(&queue_uni);
-	
+
 	while(1){
-		
-		/*
-			1. 버튼 눌렀을 때 카메라 찍기
 
-			2. OCR처리하고 큐에 유니코드 저장
+		/*1. 버튼 눌렀을 때 카메라 찍기*/
+		while(1)
+		{
+			while(1)
+			{
+				getchar(); // instead of button
+				if(execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL) < 0)
+				{
+					printf("ERROR : Capture\n");
+				}
+				else
+					break;
+			}
 
-		   */
+			if((fp = fopen("./image.jpg", "rb")) == NULL)
+			{
+				printf("ERROR : Cannot found image.\n");
+			}
+			else
+				break;
+		}
+
+		/*2. OCR처리하고 큐에 유니코드 저장*/
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while(!IsEmpty(&queue_uni))
 			Enqueue(&queue_module, decoder(Dequeue(&queue_uni)));
-		
+
 		while(!IsEmpty(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
-			
+
 			/*4. 7개 씩 모듈 제어*/
 			for(module_num = 0;module_num < MODULE_CNT;module_num++){
 				if(IsEmpty(&queue_module))
 					break;
 				else					
 					control_module(module_num, Dequeue(&queue_module));
-				
+
 			}
 
 			/*5. 다음 버튼을 누를 때 까지 대기*/
@@ -63,7 +80,7 @@ int main() {
 			/*6. 모듈 초기화*/
 			clear_all();
 		}
-		
+
 	}
 
 }
