@@ -3,6 +3,9 @@
 int prev = -1;
 int prevv = -1;
 
+int B_DD = 0; // 큰따옴표 용
+int S_DD = 0; // 작은따옴표 용
+
 /*make date using unicode and fill the queue*/
 void decoder(Queue_char *queue, int unicode);
 
@@ -1254,8 +1257,197 @@ void decoder(Queue_char *queue, int unicode) {
 			data = 0;
 			Enqueue_char(queue, data);
 			break;
+		case 0x0028: // (
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x0029: // )
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x003A: // :
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[3];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[2];
+			Enqueue_char(queue, data);
+			break;
+		case 0x0022: // "
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			if (B_DD == 0) {
+				data = SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+				B_DD = 1;
+			}
+			else {
+				data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+				B_DD = 0;
+			}
+			Enqueue_char(queue, data);
+			break;
+		case 0x0027: // '
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			if (S_DD == 0) {
+				data = SOL_NUM[5];
+				Enqueue_char(queue, data);
+				data = SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+				S_DD = 1;
+			}
+			else {
+				data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+				data = SOL_NUM[4];
+				S_DD = 0;
+			}
+			Enqueue_char(queue, data);
+			break;
+		case 0x007B: // {
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[2] + SOL_NUM[4];	
+			Enqueue_char(queue, data);
+			break;
+		case 0x007D: // }
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[3] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x005B: // [
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[4];
+			Enqueue_char(queue, data);
+			break;
+		case 0x005D: // ]
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[5];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x002D: // -
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x007E: // ~
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		/**************************** 약어 ********************************/
+		case 0x4001: // 그래서
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[1] + SOL_NUM[2] + SOL_NUM[4];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4002: // 그러나
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[0] + SOL_NUM[1];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4003: // 그러면
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[2] + SOL_NUM[3];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4004: // 그러므로
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[2] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4005: // 그런데
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[0] + SOL_NUM[1] + SOL_NUM[3] + SOL_NUM[4];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4006: // 그리고
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[0] + SOL_NUM[4] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+		case 0x4007: // 그리하여
+			if (prev_is_Latin()) {
+				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char(queue, data);
+			}
+			data = SOL_NUM[0];
+			Enqueue_char(queue, data);
+			data = SOL_NUM[0] + SOL_NUM[3] + SOL_NUM[5];
+			Enqueue_char(queue, data);
+			break;
+
 	}
 	prevv = prev;
 	prev = unicode;
 }
-	
