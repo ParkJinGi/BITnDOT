@@ -23,6 +23,7 @@ typedef struct Queue_int {
 void InitQueue_char(Queue_char *queue);
 int IsEmpty_char(Queue_char *queue);
 void Enqueue_char(Queue_char *queue, unsigned char data);
+void Enqueue_Front_char(Queue_char *queue, unsigned char data);
 unsigned char Dequeue_char(Queue_char *queue);
 unsigned char Dequeue_Back_char(Queue_char *queue);
 
@@ -57,6 +58,23 @@ void Enqueue_char(Queue_char *queue, unsigned char data)
 		queue->rear->next = now;
 	}
 	queue->rear = now;
+	queue->count++;
+}
+
+void Enqueue_Front_char(Queue_char *queue, unsigned char data)
+{
+	Node_char *now = (Node_char *)malloc(sizeof(Node_char));
+	now->data = data;
+	if (IsEmpty_char(queue))
+	{
+		now->next = NULL;
+		queue->rear = now;
+	}
+	else
+	{
+		now->next = queue->front;
+	}
+	queue->front = now;
 	queue->count++;
 }
 

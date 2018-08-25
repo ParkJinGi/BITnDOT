@@ -27,13 +27,18 @@ Queue_char queue_module;
 /*queue for unicode*/
 Queue_int queue_uni;
 
+/*Stack for Go back*/
+Stack stack;
+
 int main() {
 
 	unsigned char *data = (unsigned char *)malloc(sizeof(unsigned char) * 7);
+	unsigned char tmp;
 	int module_num;
 
 	InitQueue_char(&queue_module);
 	InitQueue_int(&queue_uni);
+	InitStack(&stack);
 
 #ifndef FOR_MODULE // Test를 위한 코드 .... 각자 컴퓨터를 사용할 때
 	while (1) {
@@ -51,9 +56,13 @@ int main() {
 		Enqueue_int(&queue_uni, 0x1106);
 		Enqueue_int(&queue_uni, 0x1106);
 		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
+		Enqueue_int(&queue_uni, 0x1107);
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while (!IsEmpty_int(&queue_uni))
@@ -65,19 +74,35 @@ int main() {
 			for (module_num = 0;module_num < MODULE_CNT;module_num++) {
 				if (IsEmpty_char(&queue_module))
 					break;
-				else
-					data[module_num] = Dequeue_char(&queue_module);
-
+				else {
+					tmp = Dequeue_char(&queue_module);
+					data[module_num] = tmp;
+					Stack_push(&stack, tmp);
+				}
 			}
-
 			print_module(data);
-
 			/*5. 다음 버튼을 누를 때 까지 대기*/
-			printf("press Enter to Next !\n");
-			getchar();
+			while (1) {
+				printf("press 'g' (next) or 'b' (back) !\n");
+				char a=getchar();
+				if (a == 'g') // 다음 버튼을 눌렀을 때
+					break;
+				else if (a == 'b') { // 뒤로가기 버튼을 눌렀을 때
+					for (int i = 0;i < module_num;i++) {
+						tmp = Stack_pop(&stack);
+						Enqueue_Front_char(&queue_module, tmp);
+					}
+					for (int i = 0;i < MODULE_CNT;i++) {
+						tmp = Stack_pop(&stack);
+						Enqueue_Front_char(&queue_module, tmp);
+					}
+					break;
+				}
+			}
+			getchar(); // 개행을 없애기 위한 코드.
+
 		}
 		printf("스캔한 모든 문자 출력 완료. Enter를 누르면 다음 이미지를 스캔.\n");
-		return(1);
 	}
 #endif
 
@@ -126,22 +151,43 @@ int main() {
 			for(module_num = 0;module_num < MODULE_CNT;module_num++){
 				if(IsEmpty_char(&queue_module))
 					break;
-				else					
-					control_module(module_num, Dequeue(&queue_module));
-				
-				control_module(module_num, Dequeue_char(&queue_module));
+				else {
+					tmp = Dequeue_char(&queue_module);
+					control_module(module_num, tmp);
+					Stack_push(&stack, tmp);
+				}
 			}
 
 			/*5. 다음 버튼을 누를 때 까지 대기*/
-			getchar();
+			while (1) {
+				printf("press 'g' (next) or 'b' (back) !\n");
+				char a = getchar();
+				if (a == 'g') // 다음 버튼을 눌렀을 때
+					break;
+				else if (a == 'b') { // 뒤로가기 버튼을 눌렀을 때
+					for (int i = 0;i < module_num;i++) {
+						tmp = Stack_pop(&stack);
+						Enqueue_Front_char(&queue_module, tmp);
+					}
+					for (int i = 0;i < MODULE_CNT;i++) {
+						tmp = Stack_pop(&stack);
+						Enqueue_Front_char(&queue_module, tmp);
+					}
+					break;
+				}
+			}
+			getchar(); // 개행을 없애기 위한 코드.
 
 			/*6. 모듈 초기화*/
 			clear_all();
 		}
 
 	}
+#endif
+
 }
 
+#ifdef FOR_MODULE // 라즈베리파이를 이용하여 모듈을 사용할 때
 void clear(int module_num) {
 	digitalWrite(latch_pin[module_num], LOW);
 	shiftOut(data_pin[module_num], clock_pin[module_num], MSBFIRST, 0x00);

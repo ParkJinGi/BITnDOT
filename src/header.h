@@ -4,6 +4,7 @@
 #include <time.h>
 #include <string.h>
 #include "queue.h"
+#include "stack.h"
 #define MODULE_CNT 7
 
 int clock_pin[MODULE_CNT] = {29,};
