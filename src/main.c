@@ -94,6 +94,10 @@ int main() {
 					}
 					for (int i = 0;i < MODULE_CNT;i++) {
 						tmp = Stack_pop(&stack);
+						if (tmp == 1) { // 스텍에 데이터가 없을 때
+							// 경고음을 넣는거도 좋은 방법
+							break;
+						}
 						Enqueue_Front_char(&queue_module, tmp);
 					}
 					break;
@@ -171,6 +175,10 @@ int main() {
 					}
 					for (int i = 0;i < MODULE_CNT;i++) {
 						tmp = Stack_pop(&stack);
+						if (tmp == 1) { // 스텍에 데이터가 없을 때
+							// 경고음을 넣는거도 좋은 방법
+							break;
+						}
 						Enqueue_Front_char(&queue_module, tmp);
 					}
 					break;

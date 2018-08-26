@@ -11,6 +11,8 @@ unsigned char Stack_pop(Stack *stack);
 
 void InitStack(Stack *stack) {
 	stack->size = 0;
+	for(int i=0;i<7;i++)
+		Stack_push(stack, 0x00);
 }
 
 void Stack_push(Stack *stack, unsigned char data){
@@ -24,7 +26,7 @@ void Stack_push(Stack *stack, unsigned char data){
 
 unsigned char Stack_pop(Stack *stack){
 	if (stack->size == 0) 
-		return 0;
+		return 1;
 	else
 		return stack->data[--stack->size];
 }
