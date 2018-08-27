@@ -116,7 +116,13 @@ int main() {
 #ifdef FOR_MODULE // 라즈베리파이를 이용하여 모듈을 사용할 때
 	FILE *fp;
 	InitModule();
-	
+	clear_all();
+
+	/********* check all module ********/
+	//check_module();
+	//return(0);
+	/**********************************/
+
 	while(1){
 		/*1. 버튼 눌렀을 때 카메라 찍기*/
 		while(1)
