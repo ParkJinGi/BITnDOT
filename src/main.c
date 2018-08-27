@@ -18,6 +18,9 @@ void clear_all();
 /*control specific module*/
 void control_module(int module_num, unsigned char data);
 
+/*check all module*/
+void check_module();
+
 #endif
 /**********************************************************/
 
@@ -111,13 +114,16 @@ int main() {
 #endif
 
 #ifdef FOR_MODULE // 라즈베리파이를 이용하여 모듈을 사용할 때
+	FILE *fp;
 	InitModule();
+	
 	while(1){
 		/*1. 버튼 눌렀을 때 카메라 찍기*/
 		while(1)
 		{
 			while(1)
 			{
+				printf("press enter to capture the image\n");
 				getchar(); // instead of button
 				if(execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL) < 0)
 				{
@@ -134,22 +140,15 @@ int main() {
 			else
 				break;
 		}
-
-		/*2. OCR처리하고 큐에 유니코드 저장*/
-
-		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
-		while(!IsEmpty(&queue_uni))
-			Enqueue(&queue_module, decoder(Dequeue(&queue_uni)));
-
-
+	
 		//2. OCR처리하고 큐에 유니코드 저장
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
-		while(!IsEmpty_int(&queue_uni))
-			Enqueue_char(&queue_module, decoder(Dequeue_int(&queue_uni)));
+		while (!IsEmpty_int(&queue_uni))
+			decoder(&queue_module, Dequeue_int(&queue_uni));
 
 
-		while(!IsEmpty(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
+		while(!IsEmpty_char(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
 
 			/*4. 7개 씩 모듈 제어*/
 			for(module_num = 0;module_num < MODULE_CNT;module_num++){
@@ -221,6 +220,19 @@ void InitModule(){
 		pinMode(latch_pin[i], OUTPUT);
 		pinMode(clock_pin[i], OUTPUT);
 		pinMode(data_pin[i], OUTPUT);
+	}
+}
+
+void check_module(){
+	printf("Press enter to start !\n");
+	getchar();
+	for (int i=0;i<MODULE_CNT;i++){
+		for(int j=0;j<6;j++){
+			printf("[MODULE : %d, SOL : %d]\n", i, j+1);
+			control_module(i, SOL_NUM[j]);
+			getchar();
+		}
+		clear_all();
 	}
 }
 #endif

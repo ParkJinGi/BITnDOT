@@ -19,13 +19,13 @@ void test(int i){
 	digitalWrite(latch_pin, LOW);
 	shiftOut(data_pin[i], clock_pin, MSBFIRST, 0x00);
 	digitalWrite(latch_pin, HIGH);
-	delay(1);
+	delay(100);
 }
 
 int main(){
 
 	wiringPiSetup();	
-	for (int i = 0;i < MODULE_CNT;i++) {
+	for (int i = 0;i < 7;i++) {
 		pinMode(latch_pin, OUTPUT);
 		pinMode(clock_pin, OUTPUT);
 	}
@@ -33,11 +33,11 @@ int main(){
 	for(int i=0;i<26;i++)
 		pinMode(data_pin[i], OUTPUT);
 
+
 	printf("\n\n=================================== TEST CODE =======================================\n");
 	for(int i=0;i<26;i++){
 		printf(" >>>>>> %d 번 핀에 (physical pin) data pin을 연결하고 Enter를 누르시오. <<<<<<<<<<<,\n", physical_pin[i]);
 		getchar();
-		test(data_pin[i]);
+		test(i);
 	}
-
 }
