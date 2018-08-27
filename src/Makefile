@@ -7,5 +7,5 @@ T:
 	./a.out
 # To using Modules
 M:
-	sudo gcc main.c -D "FOR_MODULE=1"
+	sudo gcc main.c -D "FOR_MODULE=1" -lwiringPi
 	sudo ./a.out
