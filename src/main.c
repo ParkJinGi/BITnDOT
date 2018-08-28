@@ -125,14 +125,22 @@ int main() {
 
 	while(1){
 		
+		/*********나중에 삭제********************/
+		printf("Press Enter to start\n");
+		getchar();
+		/****************************************/
+
 		/*1. 버튼 눌렀을 때 카메라 찍기*/
 		while(1){
 			if(digitalRead(foward_button) == 0)
 				break;
 		}
-		
+				
 		if(fork() == 0)
 			execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL);
+
+				
+		printf("capture\n");
 
 		//2. OCR처리하고 큐에 유니코드 저장
 
