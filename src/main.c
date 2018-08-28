@@ -131,19 +131,8 @@ int main() {
 				break;
 		}
 		
-		if(execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL) < 0)
-		{
-			printf("ERROR : Capture\n");
-		}
-		else
-			break;
-
-		if((fp = fopen("./image.jpg", "rb")) == NULL)
-		{
-			printf("ERROR : Cannot found image.\n");
-		}
-		else
-			break;
+		if(fork() == 0)
+			execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL);
 
 		//2. OCR처리하고 큐에 유니코드 저장
 
