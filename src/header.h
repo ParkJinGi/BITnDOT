@@ -11,8 +11,8 @@ int latch_pin[MODULE_CNT] = {8,0,12,30,23,15,6};
 int clock_pin[MODULE_CNT] = {9,2,13,21,24,16,10};
 int data_pin[MODULE_CNT] = {7,3,14,22,25,1,11};
 
-int back_button = 4;
-int foward_button = 5;
+int back_button = 28;
+int foward_button = 29;
 int speaker = 26;
 
 unsigned char SOL_NUM[6] = {
