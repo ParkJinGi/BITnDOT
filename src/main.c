@@ -116,31 +116,32 @@ int main() {
 #ifdef FOR_MODULE // 라즈베리파이를 이용하여 모듈을 사용할 때
 	FILE *fp;
 	InitModule();
-	
-	while(1){
-		/*1. 버튼 눌렀을 때 카메라 찍기*/
-		while(1)
-		{
-			while(1)
-			{
-				printf("press enter to capture the image\n");
-				getchar(); // instead of button
-				if(execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL) < 0)
-				{
-					printf("ERROR : Capture\n");
-				}
-				else
-					break;
-			}
+	clear_all();
 
-			if((fp = fopen("./image.jpg", "rb")) == NULL)
-			{
-				printf("ERROR : Cannot found image.\n");
-			}
-			else
+	/********* check all module ********/
+	//check_module();
+	//return(0);
+	/**********************************/
+
+	while(1){
+		
+		/*********나중에 삭제********************/
+		printf("Press Enter to start\n");
+		getchar();
+		/****************************************/
+
+		/*1. 버튼 눌렀을 때 카메라 찍기*/
+		while(1){
+			if(digitalRead(foward_button) == 0)
 				break;
 		}
-	
+				
+		if(fork() == 0)
+			execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL);
+
+				
+		printf("capture\n");
+
 		//2. OCR처리하고 큐에 유니코드 저장
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
@@ -163,11 +164,9 @@ int main() {
 
 			/*5. 다음 버튼을 누를 때 까지 대기*/
 			while (1) {
-				printf("press 'g' (next) or 'b' (back) !\n");
-				char a = getchar();
-				if (a == 'g') // 다음 버튼을 눌렀을 때
+				if (digitalRead(foward_button) == 0) // 다음 버튼을 눌렀을 때
 					break;
-				else if (a == 'b') { // 뒤로가기 버튼을 눌렀을 때
+				else if (digitalRead(back_button) == 0) { // 뒤로가기 버튼을 눌렀을 때
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
 						Enqueue_Front_char(&queue_module, tmp);
@@ -183,7 +182,6 @@ int main() {
 					break;
 				}
 			}
-			getchar(); // 개행을 없애기 위한 코드.
 
 			/*6. 모듈 초기화*/
 			clear_all();
@@ -221,6 +219,8 @@ void InitModule(){
 		pinMode(clock_pin[i], OUTPUT);
 		pinMode(data_pin[i], OUTPUT);
 	}
+	pinMode(back_button, INPUT);
+	pinMode(foward_button, INPUT);
 }
 
 void check_module(){
