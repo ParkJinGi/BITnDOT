@@ -51,6 +51,13 @@ int main() {
 	InitStack(&stack);
 	InitStack_arr(&stack_arr);
 
+	//유우빈 사용 변수들...
+	char uniArr[6]={};
+	int uniNum = 0;
+	FILE *unifp;
+	unifp = fopen("./out.txt", "r");
+
+
 #ifndef FOR_MODULE // Test를 위한 코드 .... 각자 컴퓨터를 사용할 때
 	while (1) {
 		memset(data, 0, sizeof(data));
@@ -60,21 +67,21 @@ int main() {
 		getchar();
 
 		//2. OCR처리하고 큐에 유니코드 저장
+		while(1){
+			memset(uniArr, '\0', sizeof(uniArr));
+			uniArr[0]='0';
+			uniArr[1]='x';
+			for(int i=2; i<6; i++)	
+				uniArr[i]=getc(unifp);
+			
+			if((uniArr[2]=='.')){
+				break;
+			}else{
+				uniNum = strtoul(uniArr, NULL, 16);
+				Enqueue_int(&queue_uni, uniNum);
+			}
+		}
 
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while (!IsEmpty_int(&queue_uni))
