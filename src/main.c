@@ -30,46 +30,62 @@ Queue_char queue_module;
 /*queue for unicode*/
 Queue_int queue_uni;
 
+/*queue for char*/
+Queue_char_arr queue_arr;
+
 /*Stack for Go back*/
 Stack stack;
+Stack_arr stack_arr;
 
 int main() {
 
 	unsigned char *data = (unsigned char *)malloc(sizeof(unsigned char) * 7);
 	unsigned char tmp;
+	char data_char[7][3];
+	char tmp_char[3];
+
 	int module_num;
 
 	InitQueue_char(&queue_module);
 	InitQueue_int(&queue_uni);
 	InitStack(&stack);
+	InitStack_arr(&stack_arr);
+
+	//유우빈 사용 변수들...
+	char uniArr[6]={};
+	int uniNum = 0;
+	FILE *unifp;
+	unifp = fopen("./out.txt", "r");
+
 
 #ifndef FOR_MODULE // Test를 위한 코드 .... 각자 컴퓨터를 사용할 때
 	while (1) {
 		memset(data, 0, sizeof(data));
+		memset(data_char, '\0', sizeof(data));
 
 		//1. 버튼 눌렀을 때 카메라 찍기
 		getchar();
 
 		//2. OCR처리하고 큐에 유니코드 저장
+		while(1){
+			memset(uniArr, '\0', sizeof(uniArr));
+			uniArr[0]='0';
+			uniArr[1]='x';
+			for(int i=2; i<6; i++)	
+				uniArr[i]=getc(unifp);
+			
+			if((uniArr[2]=='.')){
+				break;
+			}else{
+				uniNum = strtoul(uniArr, NULL, 16);
+				Enqueue_int(&queue_uni, uniNum);
+			}
+		}
 
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1106);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
-		Enqueue_int(&queue_uni, 0x1107);
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while (!IsEmpty_int(&queue_uni))
-			decoder(&queue_module, Dequeue_int(&queue_uni));
+			decoder(&queue_module, &queue_arr, Dequeue_int(&queue_uni));
 
 		while (!IsEmpty_char(&queue_module)) { // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
 
@@ -79,11 +95,14 @@ int main() {
 					break;
 				else {
 					tmp = Dequeue_char(&queue_module);
+					strcpy(tmp_char, Dequeue_char_arr(&queue_arr));
 					data[module_num] = tmp;
+					strcpy(data_char[module_num], tmp_char);
 					Stack_push(&stack, tmp);
+					Stack_push_arr(&stack_arr, tmp_char);
 				}
 			}
-			print_module(data);
+			print_module(data, data_char);
 			/*5. 다음 버튼을 누를 때 까지 대기*/
 			while (1) {
 				printf("press 'g' (next) or 'b' (back) !\n");
@@ -93,15 +112,19 @@ int main() {
 				else if (a == 'b') { // 뒤로가기 버튼을 눌렀을 때
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						Enqueue_Front_char(&queue_module, tmp);
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					for (int i = 0;i < MODULE_CNT;i++) {
 						tmp = Stack_pop(&stack);
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						if (tmp == 1) { // 스텍에 데이터가 없을 때
 							// 경고음을 넣는거도 좋은 방법
 							break;
 						}
 						Enqueue_Front_char(&queue_module, tmp);
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					break;
 				}
@@ -138,15 +161,14 @@ int main() {
 				
 		if(fork() == 0)
 			execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL);
-
-				
-		printf("capture\n");
+		else
+			wait((int *)0);
 
 		//2. OCR처리하고 큐에 유니코드 저장
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while (!IsEmpty_int(&queue_uni))
-			decoder(&queue_module, Dequeue_int(&queue_uni));
+			decoder(&queue_module, &queue_arr, Dequeue_int(&queue_uni));
 
 
 		while(!IsEmpty_char(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지

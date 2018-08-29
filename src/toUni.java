@@ -49,7 +49,8 @@ public class toUni{
     "1175"};
 
   final static String[] uTail = {
-    "11A8", "11A9", "11AA", "11AB",
+    "0020",
+	"11A8", "11A9", "11AA", "11AB",
     "11AC", "11AD", "11AE", "11AF",
     "11B0", "11B1", "11B2", "11B3",
     "11B4", "11B5", "11B6", "11B7",
@@ -109,7 +110,6 @@ public class toUni{
     //     < 1. 약어 처리 >
     //    
     s = yak(s);    
-    System.out.println(s);
     //    < 2. 자, 모 분리 및 유니코드로 변환 >
     //
     for(int i=0; i< s.length(); i++){
