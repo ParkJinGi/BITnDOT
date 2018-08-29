@@ -65,13 +65,13 @@ void print_queue(Queue_char *queue) {
 
 void print_module(unsigned char *data, char data_char[][3]) {
 	int bit = 2;
+	char tmp[3] = {0};
 	printf("=====================================================\n");
 	for (int j = 0;j < MODULE_CNT;j++) {
+		strncpy(tmp, data_char[j], 3);
+		tmp[3] = '\0';
 		// 8칸
-		printf(" ");
-		//printf(" ㄱ ");
-		//printf("그래서");
-		printf("   ");
+		printf("  %s    ", tmp);
 	}
 	printf("\n");
 	for (int i = 0;i < 3;i++) {

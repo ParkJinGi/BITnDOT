@@ -95,11 +95,11 @@ int main() {
 					break;
 				else {
 					tmp = Dequeue_char(&queue_module);
-					//strcpy(tmp_char, Dequeue_char_arr(&queue_arr));
+					strcpy(tmp_char, Dequeue_char_arr(&queue_arr));
 					data[module_num] = tmp;
-					//strcpy(data_char[module_num], tmp_char);
+					strcpy(data_char[module_num], tmp_char);
 					Stack_push(&stack, tmp);
-					//Stack_push_arr(&stack_arr, tmp_char);
+					Stack_push_arr(&stack_arr, tmp_char);
 				}
 			}
 			print_module(data, data_char);
@@ -112,19 +112,19 @@ int main() {
 				else if (a == 'b') { // 뒤로가기 버튼을 눌렀을 때
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
-						//strcpy(tmp_char, Stack_pop_arr(&stack_arr));
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						Enqueue_Front_char(&queue_module, tmp);
-						//Enqueue_Front_char_arr(&queue_arr, tmp_char); 
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					for (int i = 0;i < MODULE_CNT;i++) {
 						tmp = Stack_pop(&stack);
-						//strcpy(tmp_char, Stack_pop_arr(&stack_arr));
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						if (tmp == 1) { // 스텍에 데이터가 없을 때
 							// 경고음을 넣는거도 좋은 방법
 							break;
 						}
 						Enqueue_Front_char(&queue_module, tmp);
-						//Enqueue_Front_char_arr(&queue_arr, tmp_char); 
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					break;
 				}
