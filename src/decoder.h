@@ -7,7 +7,7 @@ int B_DD = 0; // 큰따옴표 용
 int S_DD = 0; // 작은따옴표 용
 
 /*make date using unicode and fill the queue*/
-void decoder(Queue_char *queue, int unicode);
+void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode);
 
 /*check prev unicode is figure*/
 int prev_is_figure();
@@ -19,7 +19,7 @@ int prev_is_Latin();
 void print_queue(Queue_char *queue);
 
 /*print to console like module*/
-void print_module(unsigned char *data);
+void print_module(unsigned char *data, char data_char[][3]);
 
 int prev_is_figure() {
 	if (prev >= 0x0030 && prev <= 0x0039)
@@ -63,34 +63,43 @@ void print_queue(Queue_char *queue) {
 	printf("========================================\n");
 }
 
-void print_module(unsigned char *data) {
+void print_module(unsigned char *data, char data_char[][3]) {
 	int bit = 2;
-	printf("========================================\n");
+	printf("=====================================================\n");
+	for (int j = 0;j < MODULE_CNT;j++) {
+		printf(" ");
+		//printf(" ㄱ ");
+		//printf("그래서");
+		printf("   ");
+	}
+	printf("\n");
 	for (int i = 0;i < 3;i++) {
 		for (int j = 0;j < MODULE_CNT;j++) {
 			for (int k = 0;k < 2;k++) {
 				if (data[j] & (bit << ((i * 2) + k)))
-					printf("● ");
+					printf(" ● ");
 				else
-					printf("○ ");
+					printf(" ○ ");
 			}
 			printf("  ");
 		}
 		printf("\n");
 	}
-	printf("========================================\n");
+	printf("=====================================================\n");
 }
 
-void decoder(Queue_char *queue, int unicode) {
+void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 	unsigned char data;
 	switch (unicode) {
 		/**********************초성************************/
 		case 0x1100: // ㄱ
 			if (prev_is_Latin()) {
 				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
+				Enqueue_char_arr(queue_arr, "");
 				Enqueue_char(queue, data);
 			}
 			data = SOL_NUM[1];
+			Enqueue_char_arr(queue_arr, "ㄱ");
 			Enqueue_char(queue, data);
 			break;
 		case 0x1102: // ㄴ

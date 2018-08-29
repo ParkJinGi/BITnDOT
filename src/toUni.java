@@ -109,7 +109,6 @@ public class toUni{
     //     < 1. 약어 처리 >
     //    
     s = yak(s);    
-    System.out.println(s);
     //    < 2. 자, 모 분리 및 유니코드로 변환 >
     //
     for(int i=0; i< s.length(); i++){
