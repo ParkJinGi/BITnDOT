@@ -69,15 +69,23 @@ void print_module(unsigned char *data, char data_char[][10]) {
 	int bit = 2;
 	char tmp[10] = {0};
 	int len;
+	int f,b;
 	printf("=====================================================\n");
 	for (int j = 0;j < MODULE_CNT;j++) {
 		strncpy(tmp, data_char[j], 10);
 		tmp[10] = '\0';
 		len = 9-strlen(tmp);
-		for (int i = 0;i < len / 2;i++)
+		if(len%2){ // len is 홀수
+			f = len/2 - 1;
+			b = (len+1)/2;
+		}else{
+			f = (len-1)/2;
+			b = len/2 + 1;
+		}
+		for (int i = 0;i < f;i++)
 			printf(" ");
 		printf("%s", tmp);
-		for (int i = 0;i < len / 2;i++)
+		for (int i = 0;i < b;i++)
 			printf(" ");
 	}
 	printf("\n");
@@ -555,7 +563,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[4];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "윿");
+			Enqueue_char_arr(queue_arr, "ㄳ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11AC: // 읁
@@ -563,7 +571,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[0] + SOL_NUM[3];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읁");
+			Enqueue_char_arr(queue_arr, "ㄵ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11AD: // 읂
@@ -571,7 +579,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읂");
+			Enqueue_char_arr(queue_arr, "ㄶ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B1: // 읆
@@ -579,7 +587,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[2] + SOL_NUM[5];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읆");
+			Enqueue_char_arr(queue_arr, "ㄻ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B0: // 읅
@@ -587,7 +595,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[0];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읅");
+			Enqueue_char_arr(queue_arr, "ㄺ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B2: // 읇
@@ -595,7 +603,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[0] + SOL_NUM[2];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읇");
+			Enqueue_char_arr(queue_arr, "ㄼ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B3: // 읈
@@ -603,7 +611,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[4];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읈");
+			Enqueue_char_arr(queue_arr, "ㄽ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B4: // 읉
@@ -611,7 +619,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읉");
+			Enqueue_char_arr(queue_arr, "ㄾ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B5: // 읊
@@ -619,7 +627,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읊");
+			Enqueue_char_arr(queue_arr, "ㄿ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B6: // 읋
@@ -627,7 +635,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[3] + SOL_NUM[4] + SOL_NUM[5];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읋");
+			Enqueue_char_arr(queue_arr, "ㅀ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 		case 0x11B9: // 읎
@@ -635,7 +643,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			data = SOL_NUM[4];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "읎");
+			Enqueue_char_arr(queue_arr, "ㅄ");
 			Enqueue_char_arr(queue_arr, "");
 			break;
 			/*********************모음********************/
@@ -999,7 +1007,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			}
 			data = SOL_NUM[0] + SOL_NUM[3];
 			Enqueue_char(queue, data);
-			Enqueue_char_arr(queue_arr, "3");
+			Enqueue_char_arr(queue_arr, "2");
 			break;
 		case 0x0033: // 3
 			if (prev_is_Latin()) {

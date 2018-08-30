@@ -39,7 +39,7 @@ Stack_arr stack_arr;
 
 int main() {
 
-	unsigned char *data = (unsigned char *)malloc(sizeof(unsigned char) * 7);
+	unsigned char data[7];
 	unsigned char tmp;
 	char data_char[7][10];
 	char tmp_char[10];
@@ -60,13 +60,15 @@ int main() {
 
 #ifndef FOR_MODULE // Test를 위한 코드 .... 각자 컴퓨터를 사용할 때
 	while (1) {
-		memset(data, 0, sizeof(data));
-		memset(data_char, '\0', sizeof(data));
 
 		//1. 버튼 눌렀을 때 카메라 찍기
+		printf("Press Enter instead of take picture\n");
 		getchar();
 
 		//2. OCR처리하고 큐에 유니코드 저장
+
+		system("java toUni testTEXT.txt");
+
 		while(1){
 			memset(uniArr, '\0', sizeof(uniArr));
 			uniArr[0]='0';
@@ -88,7 +90,9 @@ int main() {
 			decoder(&queue_module, &queue_arr, Dequeue_int(&queue_uni));
 
 		while (!IsEmpty_char(&queue_module)) { // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
-
+			memset(data, '\0', sizeof(data));
+			memset(data_char, '\0', sizeof(data_char));
+			
 			/*4. 7개 씩 모듈 제어*/
 			for (module_num = 0;module_num < MODULE_CNT;module_num++) {
 				if (IsEmpty_char(&queue_module))
@@ -141,10 +145,10 @@ int main() {
 	InitModule();
 	clear_all();
 
-	/********* check all module ********/
-	//check_module();
-	//return(0);
-	/**********************************/
+	#ifdef CHECK	
+		check_module();
+		return(0);
+	#endif
 
 	while(1){
 		
@@ -165,6 +169,21 @@ int main() {
 			wait((int *)0);
 
 		//2. OCR처리하고 큐에 유니코드 저장
+		system("java toUni testTEXT.txt");
+		while(1){
+			memset(uniArr, '\0', sizeof(uniArr));
+			uniArr[0]='0';
+			uniArr[1]='x';
+			for(int i=2; i<6; i++)	
+				uniArr[i]=getc(unifp);
+			
+			if((uniArr[2]=='.')){
+				break;
+			}else{
+				uniNum = strtoul(uniArr, NULL, 16);
+				Enqueue_int(&queue_uni, uniNum);
+			}
+		}
 
 		/*3. unicode를 이용하여 모듈을 제어하는 data로 바꾸어 다른 큐에 저장*/
 		while (!IsEmpty_int(&queue_uni))
@@ -172,17 +191,24 @@ int main() {
 
 
 		while(!IsEmpty_char(&queue_module)){ // 한 번 스캔한 모든 문자열을 점자로 표현할 때 까지
-
+			memset(data, '\0', sizeof(data));
+			memset(data_char, '\0', sizeof(data_char));
+			
 			/*4. 7개 씩 모듈 제어*/
-			for(module_num = 0;module_num < MODULE_CNT;module_num++){
-				if(IsEmpty_char(&queue_module))
+			for (module_num = 0;module_num < MODULE_CNT;module_num++) {
+				if (IsEmpty_char(&queue_module))
 					break;
 				else {
 					tmp = Dequeue_char(&queue_module);
-					control_module(module_num, tmp);
+					strcpy(tmp_char, Dequeue_char_arr(&queue_arr));
+					data[module_num] = tmp;
+					strcpy(data_char[module_num], tmp_char);
 					Stack_push(&stack, tmp);
+					Stack_push_arr(&stack_arr, tmp_char);
+					control_module(module_num, tmp);
 				}
 			}
+			print_module(data, data_char);
 
 			/*5. 다음 버튼을 누를 때 까지 대기*/
 			while (1) {
@@ -191,24 +217,26 @@ int main() {
 				else if (digitalRead(back_button) == 0) { // 뒤로가기 버튼을 눌렀을 때
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						Enqueue_Front_char(&queue_module, tmp);
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					for (int i = 0;i < MODULE_CNT;i++) {
 						tmp = Stack_pop(&stack);
+						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
 						if (tmp == 1) { // 스텍에 데이터가 없을 때
 							// 경고음을 넣는거도 좋은 방법
 							break;
 						}
 						Enqueue_Front_char(&queue_module, tmp);
+						Enqueue_Front_char_arr(&queue_arr, tmp_char); 
 					}
 					break;
 				}
 			}
-
 			/*6. 모듈 초기화*/
 			clear_all();
 		}
-
 	}
 #endif
 
