@@ -21,7 +21,7 @@ int prev_is_Latin();
 void print_queue(Queue_char *queue);
 
 /*print to console like module*/
-void print_module(unsigned char *data, char data_char[][10]);
+void print_module(unsigned char *data, char data_char[][13]);
 
 int prev_is_figure() {
 	if (prev >= 0x0030 && prev <= 0x0039)
@@ -65,42 +65,42 @@ void print_queue(Queue_char *queue) {
 	printf("========================================\n");
 }
 
-void print_module(unsigned char *data, char data_char[][10]) {
+void print_module(unsigned char *data, char data_char[][13]) {
 	int bit = 2;
-	char tmp[10] = {0};
+	char tmp[13] = {0};
 	int len;
-	int f,b;
+	printf("====================");
 	printf("=====================================================\n");
 	for (int j = 0;j < MODULE_CNT;j++) {
-		strncpy(tmp, data_char[j], 10);
-		tmp[10] = '\0';
-		len = 9-strlen(tmp);
-		if(len%2){ // len is 홀수
-			f = len/2 - 1;
-			b = (len+1)/2;
-		}else{
-			f = (len-1)/2;
-			b = len/2 + 1;
-		}
-		for (int i = 0;i < f;i++)
-			printf(" ");
-		printf("%s", tmp);
-		for (int i = 0;i < b;i++)
-			printf(" ");
+		strncpy(tmp, data_char[j], 13);
+		tmp[13] = '\0';
+		len = strlen(tmp); // 1 or 3 or 9 or 12
+
+		if(len == 1)
+			printf("    %s      ", tmp);
+		else if(len == 3)
+			printf("    %s     ", tmp);
+		else if(len == 9)
+			printf("   %s     ", tmp);
+		else if(len == 12)
+			printf(" %s    ", tmp);
+		else
+			printf("          ");
 	}
 	printf("\n");
 	for (int i = 0;i < 3;i++) {
 		for (int j = 0;j < MODULE_CNT;j++) {
 			for (int k = 0;k < 2;k++) {
 				if (data[j] & (bit << ((i * 2) + k)))
-					printf(" ● ");
+					printf("  ● ");
 				else
-					printf(" ○ ");
+					printf("  ○ ");
 			}
-			printf("  ");
+			printf("   ");
 		}
 		printf("\n");
 	}
+	printf("====================");
 	printf("=====================================================\n");
 }
 
