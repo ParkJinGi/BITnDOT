@@ -8,7 +8,7 @@ typedef struct {
 
 typedef struct {
 	int size;
-	char data[STACKSIZE][3];
+	char data[STACKSIZE][10];
 } Stack_arr;
 
 void InitStack(Stack *stack);

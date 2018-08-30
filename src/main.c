@@ -41,8 +41,8 @@ int main() {
 
 	unsigned char *data = (unsigned char *)malloc(sizeof(unsigned char) * 7);
 	unsigned char tmp;
-	char data_char[7][3];
-	char tmp_char[3];
+	char data_char[7][10];
+	char tmp_char[10];
 
 	int module_num;
 
