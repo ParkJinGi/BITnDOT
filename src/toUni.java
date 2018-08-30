@@ -86,8 +86,8 @@ public class toUni{
       String s;
       while ((s=in.readLine()) != null){
         out.write(toUni(s));
-        out.newLine();
       }
+	  out.write(".");
       in.close();
       out.close();
 
