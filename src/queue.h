@@ -12,7 +12,7 @@ typedef struct Queue_char {
 }Queue_char;
 
 typedef struct Node_char_arr {
-	char data[10];
+	char data[13];
 	struct Node_char_arr *next;
 }Node_char_arr;
 
@@ -195,7 +195,7 @@ void Enqueue_Front_char_arr(Queue_char_arr *queue, char* data)
 
 char* Dequeue_char_arr(Queue_char_arr *queue)
 {
-	char* re = (char *)malloc(sizeof(char)*10);
+	char* re = (char *)malloc(sizeof(char)*13);
 	memset(re, '\0', sizeof(re));
 	Node_char_arr *now;
 	if (IsEmpty_char_arr(queue))
@@ -212,7 +212,7 @@ char* Dequeue_char_arr(Queue_char_arr *queue)
 
 char* Dequeue_Back_char_arr(Queue_char_arr *queue)
 {
-	char* re = (char *)malloc(sizeof(char)*10);
+	char* re = (char *)malloc(sizeof(char)*13);
 	memset(re, '\0', sizeof(re));
 	Node_char_arr *now;
 	Node_char_arr *tmp = queue->front;

@@ -41,8 +41,8 @@ int main() {
 
 	unsigned char data[7];
 	unsigned char tmp;
-	char data_char[7][10];
-	char tmp_char[10];
+	char data_char[7][13];
+	char tmp_char[13];
 
 	int module_num;
 
