@@ -159,8 +159,13 @@ int main() {
 
 		/*1. 버튼 눌렀을 때 카메라 찍기*/
 		while(1){
-			if(digitalRead(foward_button) == 0)
+			if (digitalRead(foward_button) == 0) {
+				while (1) {
+					if (digitalRead(foward_button) == 1)
+						break;
+				}
 				break;
+			}
 		}
 				
 		if(fork() == 0)
@@ -212,9 +217,18 @@ int main() {
 
 			/*5. 다음 버튼을 누를 때 까지 대기*/
 			while (1) {
-				if (digitalRead(foward_button) == 0) // 다음 버튼을 눌렀을 때
+				if (digitalRead(foward_button) == 0) { // 다음 버튼을 눌렀을 때
+					while (1) {
+						if (digitalRead(foward_button) == 1)
+							break;
+					}
 					break;
+				}
 				else if (digitalRead(back_button) == 0) { // 뒤로가기 버튼을 눌렀을 때
+					while (1) {
+						if (digitalRead(back_button) == 1)
+							break;
+					}
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
 						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
@@ -278,11 +292,11 @@ void check_module(){
 	getchar();
 	for (int i=0;i<MODULE_CNT;i++){
 		for(int j=0;j<6;j++){
+			clear_all();
 			printf("[MODULE : %d, SOL : %d]\n", i, j+1);
 			control_module(i, SOL_NUM[j]);
 			getchar();
 		}
-		clear_all();
 	}
 }
 #endif
