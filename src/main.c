@@ -288,15 +288,16 @@ void InitModule(){
 }
 
 void check_module(){
+	clear_all();
 	printf("Press enter to start !\n");
 	getchar();
 	for (int i=0;i<MODULE_CNT;i++){
 		for(int j=0;j<6;j++){
-			clear_all();
 			printf("[MODULE : %d, SOL : %d]\n", i, j+1);
 			control_module(i, SOL_NUM[j]);
 			getchar();
 		}
+		clear_all();
 	}
 }
 #endif
