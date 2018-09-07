@@ -7,7 +7,6 @@ def hough(thr):
     img = cv2.imread('./image.jpg')
     imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    # Canny의 두번째, 세번째 인자값도 조절하면 정확도 달라짐
     edges = cv2.Canny(imgray, 100, 150, apertureSize=3)
 
     lines = cv2.HoughLines(edges, 1, np.pi/180, thr)
@@ -39,5 +38,4 @@ def hough(thr):
     cv2.destroyAllWindows()
 
 
-# 인자 값 바꾸면 정확도가 달라짐
 hough(190)

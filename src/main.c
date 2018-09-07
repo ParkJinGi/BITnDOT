@@ -43,13 +43,10 @@ int main() {
 	unsigned char tmp;
 	char data_char[7][13];
 	char tmp_char[13];
+	clock_t tm_start;
+	int reset;
 
 	int module_num;
-
-	InitQueue_char(&queue_module);
-	InitQueue_int(&queue_uni);
-	InitStack(&stack);
-	InitStack_arr(&stack_arr);
 
 	//유우빈 사용 변수들...
 	char uniArr[6]={};
@@ -61,14 +58,24 @@ int main() {
 #ifndef FOR_MODULE // Test를 위한 코드 .... 각자 컴퓨터를 사용할 때
 	while (1) {
 
-		//1. 버튼 눌렀을 때 카메라 찍기
+		InitQueue_char(&queue_module);
+		InitQueue_int(&queue_uni);
+		InitStack(&stack);
+		InitStack_arr(&stack_arr);
+		//1-1. 버튼 눌렀을 때 카메라 찍기. 
 		printf("Press Enter instead of take picture\n");
 		getchar();
+		
+		//1-2. 카메라로 찍은 이미지를 한 장의 이미지로 변환
+		system("./crop photo_2.jpg"); // photo_2.jpg를 변환한다는 뜻
 
+		//1-3. tmp.jpg로 저장된 이미지를 텍스트로 변환
+		printf("OCR 처리중...\n");
+		system("python ocr.py");
+		
 		//2. OCR처리하고 큐에 유니코드 저장
-
-		system("java toUni testTEXT.txt");
-
+		system("java toUni TEXT.txt"); //TEXT.txt를 유니코드로 바꾼다는 뜻
+		
 		while(1){
 			memset(uniArr, '\0', sizeof(uniArr));
 			uniArr[0]='0';
@@ -151,7 +158,12 @@ int main() {
 	#endif
 
 	while(1){
-		
+		reset = 0;
+		InitQueue_char(&queue_module);
+		InitQueue_int(&queue_uni);
+		InitStack(&stack);
+		InitStack_arr(&stack_arr);
+
 		/*********나중에 삭제********************/
 		printf("Press Enter to start\n");
 		getchar();
@@ -172,7 +184,14 @@ int main() {
 			execl("/usr/bin/raspistill", "raspistill", "-t", "1", "-o", "image.jpg", NULL);
 		else
 			wait((int *)0);
+	
+		//1-2. 카메라로 찍은 이미지를 한 장의 이미지로 변환
+		system("./crop image.jpg"); // photo_2.jpg를 변환한다는 뜻
 
+		//1-3. tmp.jpg로 저장된 이미지를 텍스트로 변환
+		printf("OCR 처리중...\n");
+		system("python ocr.py");
+		
 		//2. OCR처리하고 큐에 유니코드 저장
 		system("java toUni testTEXT.txt");
 		while(1){
@@ -225,10 +244,17 @@ int main() {
 					break;
 				}
 				else if (digitalRead(back_button) == 0) { // 뒤로가기 버튼을 눌렀을 때
+					tm_start = clock();
 					while (1) {
 						if (digitalRead(back_button) == 1)
 							break;
+						else if(clock() > tm_start + 5000000){
+							reset=1;
+							break;
+						}
 					}
+					if(reset)
+						break;
 					for (int i = 0;i < module_num;i++) {
 						tmp = Stack_pop(&stack);
 						strcpy(tmp_char, Stack_pop_arr(&stack_arr));
@@ -248,6 +274,8 @@ int main() {
 					break;
 				}
 			}
+			if(reset)
+				break;
 			/*6. 모듈 초기화*/
 			clear_all();
 		}
@@ -288,7 +316,6 @@ void InitModule(){
 }
 
 void check_module(){
-	clear_all();
 	printf("Press enter to start !\n");
 	getchar();
 	for (int i=0;i<MODULE_CNT;i++){
