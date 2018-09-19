@@ -81,7 +81,7 @@ public class toUni{
             new FileInputStream(args[0]), "UTF-8"));
       BufferedWriter out = new BufferedWriter(
           new OutputStreamWriter(
-            new FileOutputStream("out.txt"), "UTF-8"));
+            new FileOutputStream("Unicode.txt"), "UTF-8"));
 
       String s;
       while ((s=in.readLine()) != null){

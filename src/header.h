@@ -8,13 +8,13 @@
 #include "stack.h"
 #define MODULE_CNT 7
 
-int clock_pin[MODULE_CNT] = {8,0,12,30,23,15,6};
-int latch_pin[MODULE_CNT] = {9,2,13,21,24,16,10};
-int data_pin[MODULE_CNT] = {7,3,14,22,25,1,11};
+int clock_pin[MODULE_CNT] = {7,1,3,6,14,31,25};
+int latch_pin[MODULE_CNT] = {9,16,2,5,13,11,24};
+int data_pin[MODULE_CNT] = {8,15,0,4,12,10,23};
 
 int back_button = 28;
 int foward_button = 29;
-int speaker = 26;
+//int speaker = 26;
 
 unsigned char SOL_NUM[6] = {
 	0b00000010, 0b00000100, 0b00001000,

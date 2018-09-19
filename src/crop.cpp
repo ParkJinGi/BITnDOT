@@ -27,14 +27,13 @@ int main(int a, char *arr[]){
 	if( line_1>200 && line_2<150 && line_3<150){
 		val = 1;
 	}
-
+/*
 	if(val == 0){
 		puts("이미지 한 장...");
 		imwrite("tmp.jpg", img);
 		exit(1);
 	}
-	puts("이미지 두 장...");
-	
+*/	
 	Mat img1 = img(Range(0, img.rows), Range(0, img.cols/2));
 	Mat img2 = img(Range(0, img.rows), Range(img.cols/2, img.cols));
 	Mat img_result;
@@ -57,6 +56,6 @@ int main(int a, char *arr[]){
 */	
 //	imshow("result" ,img_result);
 //	waitKey();
-	imwrite("tmp.jpg", img_result);
+	imwrite("Croped_Picture.jpg", img_result);
 	return 2;
 }

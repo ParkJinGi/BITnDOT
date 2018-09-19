@@ -2,15 +2,17 @@ import io
 from google.cloud import vision
 from google.cloud.vision import types
 
+from google.oauth2 import service_account
+credentials = service_account.Credentials.from_service_account_file('/home/pi/DOTnBIT/SSUOCR-ead5b6965a12.json')
+
 import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
-path = "./tmp.jpg"
-#path = './images.png'
+path = "./Croped_Picture.jpg"
 
 def detect_text(path):
 	"""Detects text in the file."""
-	client = vision.ImageAnnotatorClient()
+	client = vision.ImageAnnotatorClient(credentials=credentials)
 
 	wri = open("./TEXT.txt",'w')
 
@@ -23,8 +25,5 @@ def detect_text(path):
 	texts = response.text_annotations
 	
 	wri.write('{}'.format(texts[0].description).replace('\n',""))
-#	for text in texts:
-#		print('{}'.format(text.description))
-#		wri.write('{}'.format(text.description))
 
 detect_text(path)

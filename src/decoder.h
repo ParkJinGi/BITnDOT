@@ -873,7 +873,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				en = 0;
 			}
 			else
-			Enqueue_char_arr(queue_arr, "ㅔ");
+				Enqueue_char_arr(queue_arr, "ㅔ");
 			break;
 		case 0x1168: // ㅖ
 			if (!(prevv >= 0x11A8 && prevv <= 0x11C2) && prev == 0x110B) {
@@ -887,8 +887,8 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "예");
 				en = 0;
 			}
-				else
-			Enqueue_char_arr(queue_arr, "ㅖ");
+			else
+				Enqueue_char_arr(queue_arr, "ㅖ");
 			break;
 		case 0x116A: // ㅘ
 			data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[4] + SOL_NUM[5];
@@ -907,6 +907,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "왜");
 				en = 0;
 			}
+			else
 				Enqueue_char_arr(queue_arr, "ㅙ");
 			data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4];
 			Enqueue_char(queue, data);
@@ -919,6 +920,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "외");
 				en = 0;
 			}
+			else
 				Enqueue_char_arr(queue_arr, "ㅚ");
 			break;
 		case 0x116F: // ㅝ
@@ -928,6 +930,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "워");
 				en = 0;
 			}
+			else
 				Enqueue_char_arr(queue_arr, "ㅝ");
 			break;
 		case 0x1170: // ㅞ
@@ -937,6 +940,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "웨");
 				en = 0;
 			}
+			else
 				Enqueue_char_arr(queue_arr, "ㅞ");
 			data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4];
 			Enqueue_char(queue, data);
@@ -949,6 +953,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "위");
 				en = 0;
 			}
+			else
 				Enqueue_char_arr(queue_arr, "ㅟ");
 			data = SOL_NUM[0] + SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[4];
 			Enqueue_char(queue, data);
@@ -961,7 +966,8 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 				Enqueue_char_arr(queue_arr, "의");
 				en = 0;
 			}
-			Enqueue_char_arr(queue_arr, "ㅢ");
+			else
+				Enqueue_char_arr(queue_arr, "ㅢ");
 			break;
 			/**********************figure**************************/
 		case 0x0030: // 0
@@ -1736,7 +1742,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char(queue, data);
 			Enqueue_char_arr(queue_arr, "z");
 			break;
-		/***********************특수문자********************************/
+			/***********************특수문자********************************/
 		case 0x002E: // .
 			if (prev_is_Latin()) {
 				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];
@@ -1933,7 +1939,7 @@ void decoder(Queue_char *queue, Queue_char_arr *queue_arr, int unicode) {
 			Enqueue_char_arr(queue_arr, "~");
 			Enqueue_char_arr(queue_arr, "");
 			break;
-		/**************************** 약어 ********************************/
+			/**************************** 약어 ********************************/
 		case 0x4001: // 그래서
 			if (prev_is_Latin()) {
 				data = SOL_NUM[2] + SOL_NUM[3] + SOL_NUM[5];

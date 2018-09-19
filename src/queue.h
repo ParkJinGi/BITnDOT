@@ -40,6 +40,7 @@ void Enqueue_Front_char(Queue_char *queue, unsigned char data);
 unsigned char Dequeue_char(Queue_char *queue);
 unsigned char Dequeue_Back_char(Queue_char *queue);
 Queue_char* queue_copy_char(Queue_char *origin);
+void resetQueue_char(Queue_char *queue);
 
 void InitQueue_char_arr(Queue_char_arr *queue);
 int IsEmpty_char_arr(Queue_char_arr *queue);
@@ -55,7 +56,8 @@ void Enqueue_int(Queue_int *queue, int data);
 int Dequeue_int(Queue_int *queue);
 int Dequeue_Back_int(Queue_int *queue);
 Queue_int* queue_copy_int(Queue_int *origin);
-	
+void resetQueue_int(Queue_int *queue);
+
 void InitQueue_char(Queue_char *queue)
 {
 	queue->front = queue->rear = NULL;
